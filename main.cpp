@@ -22,7 +22,16 @@ int main(){
         return 1;
     }
     const char* msg = "Hello, Server!";
-    send(client_socket, msg, strlen(msg), 0);
+    std::string message;
+    std::cout << "Enter a message to send to the server (or press Enter to use default message): ";
+    std::getline(std::cin, message);
+    if(message.empty()){
+        std::cout << "No message entered, using default message: " << msg << std::endl;
+        close(client_socket);
+        return 1;
+    }
+    std::cout << "Sending message to server: " << message << std::endl;
+    send(client_socket, message.c_str(), strlen(message.c_str()), 0);
 
     char buffer[1024] = {0};
     ssize_t bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
