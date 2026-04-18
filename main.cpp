@@ -15,7 +15,11 @@ int main(){
     memset(&server_address, 0, sizeof(server_address));
     server_address.sin6_family = AF_INET6;
     server_address.sin6_port = htons(8080);
-    inet_pton(AF_INET6, "192.168.248.129", &server_address.sin6_addr);
+    if(inet_pton(AF_INET6, "::ffff:192.168.248.129", &server_address.sin6_addr) <= 0){
+        std::cerr << "Failed to convert IP address" << std::endl;
+        close(client_socket);
+        return 1;
+    }
     if(connect(client_socket,(struct sockaddr *)&server_address, sizeof(server_address)) < 0){
         std::cerr << "Failed to connect to server" << std::endl;
         close(client_socket);
